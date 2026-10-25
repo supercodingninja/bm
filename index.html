@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Better Math — demo</title>
+<meta name="description" content="Better Math — a calm, kind math app for kids. Watch the demo, then press Get Started.">
+<!--
+This Area Of Code Is: The whole landing page — the demo video itself.
+Explanation: The page IS the video: it fills every screen edge-to-edge and autoplays
+instantly (muted, which every browser allows). The moment the visitor taps anywhere —
+or the sound chip — the song comes on, because browsers require one human gesture
+before audio. The only chrome is a floating wordmark up top and a slim player bar at
+the bottom with one job: Get Started, which routes to better-math.html. The bar fades
+away while the video plays and returns on touch, so it never blocks the picture.
+In Other Words: Press play, watch the movie, hit the big button. That is the site.
+-->
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#10151c;overflow:hidden;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Avenir Next Rounded","Arial Rounded MT Bold",Verdana,sans-serif}
+#demo{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;background:#10151c}
+
+/* floating wordmark */
+.chip{position:fixed;top:calc(14px + env(safe-area-inset-top));left:calc(14px + env(safe-area-inset-left));
+  z-index:10;display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.9);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  border:1px solid rgba(224,214,191,.8);border-radius:999px;padding:9px 16px;
+  box-shadow:0 6px 18px rgba(0,0,0,.25);color:#3B3A33;font-weight:700;font-size:16px;
+  transition:opacity .4s ease}
+.chip small{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#7D7668;font-weight:600;display:block;line-height:1.2}
+
+/* player bar */
+.bar{position:fixed;left:50%;transform:translateX(-50%);
+  bottom:calc(18px + env(safe-area-inset-bottom));z-index:10;
+  display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.9);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  border:1px solid rgba(224,214,191,.8);border-radius:999px;padding:8px;
+  box-shadow:0 10px 28px rgba(0,0,0,.3);transition:opacity .4s ease}
+.iconbtn{width:48px;height:48px;border-radius:50%;border:none;background:transparent;font-size:20px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;color:#3B3A33}
+.iconbtn:active{transform:scale(.92)}
+.go{display:inline-flex;align-items:center;gap:8px;background:#5B8DB8;color:#fff;text-decoration:none;
+  font-weight:700;font-size:17px;padding:0 26px;height:48px;border-radius:999px;white-space:nowrap;
+  box-shadow:0 6px 16px rgba(91,141,184,.45);transition:transform .15s ease}
+.go:hover{transform:translateY(-1px)} .go:active{transform:scale(.97)}
+
+/* auto-hide chrome while playing */
+body.idle .chip,body.idle .bar{opacity:0;pointer-events:none}
+body.idle{cursor:none}
+
+/* sound hint */
+.hint{position:fixed;right:calc(14px + env(safe-area-inset-right));top:calc(14px + env(safe-area-inset-top));z-index:11;
+  background:rgba(255,255,255,.94);border:1px solid rgba(224,214,191,.8);border-radius:999px;padding:11px 18px;
+  font-weight:700;font-size:14px;color:#3B3A33;box-shadow:0 8px 22px rgba(0,0,0,.25);cursor:pointer;
+  display:flex;align-items:center;gap:8px;transition:opacity .4s ease}
+.hint .tri{width:0;height:0;border-left:11px solid #5B8DB8;border-top:7px solid transparent;border-bottom:7px solid transparent}
+body.sound-on .hint{display:none}
+
+@media (prefers-reduced-motion:reduce){
+  #demo{display:none}
+  body{background:radial-gradient(120% 120% at 50% 0%,#22303f,#10151c)}
+}
+</style>
+</head>
+<body>
+
+<video id="demo" src="better-math-demo.mp4" poster="demo-poster.jpg" playsinline loop muted autoplay></video>
+
+<div class="chip">Better Math<small>SCN Technologies™</small></div>
+
+<button class="hint" id="hint"><span class="tri"></span> tap for the song</button>
+
+<div class="bar" id="bar">
+  <button class="iconbtn" id="pp" aria-label="play or pause">⏸</button>
+  <a class="go" href="better-math.html">Get Started <span aria-hidden="true">→</span></a>
+  <button class="iconbtn" id="snd" aria-label="sound on or off">🔇</button>
+</div>
+
+<script>
+(function(){
+  var v=document.getElementById('demo'),
+      pp=document.getElementById('pp'),
+      snd=document.getElementById('snd'),
+      hint=document.getElementById('hint'),
+      idleTimer=null;
+
+  /* 1) try the dream: autoplay WITH sound. Browsers almost always say no,
+        so the fallback (muted autoplay) kicks in instantly. */
+  v.muted=false;
+  var tryPlay=v.play();
+  if(tryPlay&&tryPlay.catch){tryPlay.catch(function(){v.muted=true;v.play().catch(function(){});syncSnd();});}
+  else{syncSnd();}
+
+  function syncSnd(){
+    snd.textContent=v.muted?'🔇':'🔊';
+    document.body.classList.toggle('sound-on',!v.muted);
+  }
+  function unmute(){v.muted=false;v.play().catch(function(){});syncSnd();}
+  function toggleMute(){v.muted=!v.muted;if(!v.muted)v.play().catch(function(){});syncSnd();}
+  function togglePlay(){if(v.paused){v.play();pp.textContent='⏸';}else{v.pause();pp.textContent='▶';}}
+
+  /* first human gesture anywhere: bring the song on */
+  function firstTouch(){unmute();window.removeEventListener('pointerdown',firstTouch);}
+  window.addEventListener('pointerdown',firstTouch);
+
+  hint.addEventListener('click',function(e){e.stopPropagation();unmute();});
+  snd.addEventListener('click',function(e){e.stopPropagation();toggleMute();});
+  pp.addEventListener('click',function(e){e.stopPropagation();togglePlay();});
+
+  /* tapping the video itself pauses/plays */
+  v.addEventListener('click',togglePlay);
+
+  /* hide the chrome while the show runs; wake it on touch/mouse */
+  function wake(){
+    document.body.classList.remove('idle');
+    clearTimeout(idleTimer);
+    idleTimer=setTimeout(function(){if(!v.paused)document.body.classList.add('idle');},3000);
+  }
+  ['pointermove','pointerdown','touchstart'].forEach(function(ev){window.addEventListener(ev,wake,{passive:true});});
+  v.addEventListener('playing',wake); v.addEventListener('pause',function(){document.body.classList.remove('idle');});
+  wake();
+  syncSnd();
+})();
+</script>
+</body>
+</html>
