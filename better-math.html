@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Better Math — an SCN Technologies™ app</title>
+<!--
+This Area Of Code Is: The page head and the calm color palette.
+Explanation: I set up the document and define every color as a named variable so themes
+and dark mode are just variable swaps. Neutral and The Alpha Male (farm) each get their
+own light palette and their own dark palette — all of them calm-science compliant: no
+glare, no alarm reds, softened contrast for young eyes.
+In Other Words: I picked gentle paint colors and gave each one a name tag, with a
+separate paint box for each theme and for lights-out.
+-->
+<style>
+:root{
+  /* Neutral theme — calm science palette */
+  --cream:#FBF7EE; --paper:#FFFFFF;
+  --ink:#4A4A45; --ink-soft:#8A8477;
+  --blue:#5B8DB8; --blue-soft:#DCEAF5; --blue-ghost:#F1F7FB;
+  --sage:#7FA87F; --sage-soft:#E4EFE1;
+  --amber:#DFA651; --amber-soft:#FAF0DC;
+  --coral:#DE8B70; --coral-soft:#F9E7DF;
+  --lav:#9B8AC4; --lav-soft:#EDE8F8;
+  --line:#E6DFCF; --plot1:#EFE7D2; --plot2:#E9E0C8;
+  --shadow:0 2px 10px rgba(74,74,69,.07);
+  --r-lg:18px; --r-md:12px;
+}
+/* The Alpha Male theme — the farm: tilled earth, deep crop green, steel, wheat */
+body.theme-alpha{
+  --cream:#F6EFDF; --paper:#FFFDF6;
+  --ink:#3B3A33; --ink-soft:#7D7668;
+  --blue:#4A6B8A; --blue-soft:#DDE7EF; --blue-ghost:#F1F5F8;
+  --sage:#3F6B4F; --sage-soft:#E2EBE0;
+  --amber:#C98F2E; --amber-soft:#F7ECD4;
+  --coral:#B05C44; --coral-soft:#F6E3DC;
+  --lav:#7A6A8A; --lav-soft:#ECE7F1;
+  --line:#E0D6BF; --plot1:#DCC9A3; --plot2:#D2BB8F;
+}
+/* Dark mode — Neutral variant: cool night blue */
+body.dark{
+  --cream:#1B2430; --paper:#232F3D;
+  --ink:#E6EDF3; --ink-soft:#9FB0BF;
+  --blue:#7FA8C9; --blue-soft:#2A3A4C; --blue-ghost:#253443;
+  --sage:#8FB894; --sage-soft:#2A3B30;
+  --amber:#D9B36C; --amber-soft:#3B3325;
+  --coral:#D69A85; --coral-soft:#3E2F2A;
+  --lav:#A99BD0; --lav-soft:#322E42;
+  --line:#37485A; --plot1:#2E3947; --plot2:#28323F;
+  --shadow:0 2px 10px rgba(0,0,0,.35);
+}
+/* Dark mode — Alpha variant: warm dark earth */
+body.dark.theme-alpha{
+  --cream:#221E18; --paper:#2E2820;
+  --ink:#EDE4D2; --ink-soft:#B0A48D;
+  --blue:#7FA0BE; --blue-soft:#33302A; --blue-ghost:#2E2B25;
+  --sage:#7FA87F; --sage-soft:#2C3328;
+  --amber:#D9A441; --amber-soft:#3A3226;
+  --coral:#C77E63; --coral-soft:#3C2F28;
+  --lav:#A08CB8; --lav-soft:#312C3A;
+  --line:#4A4238; --plot1:#38312A; --plot2:#322C25;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--cream); color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Avenir Next Rounded","Arial Rounded MT Bold","Trebuchet MS",Verdana,sans-serif;
+  font-size:17px; line-height:1.6;
+}
+/* Accessibility: three reading sizes, calm mode, extra reading space */
+body.text-s{font-size:15px}
+body.text-m{font-size:17px}
+body.text-l{font-size:20px}
+body.calm *{animation:none!important;transition:none!important}
+body.wide{letter-spacing:.02em;word-spacing:.14em;line-height:1.85}
+.wrap{max-width:980px;margin:0 auto;padding:calc(18px + env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) calc(52px + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left))}
+h1{font-size:30px;margin:8px 0 2px;letter-spacing:.3px}
+.brand{font-size:13px;letter-spacing:2.5px;text-transform:uppercase;color:var(--ink-soft);margin:0 0 2px}
+.tag{color:var(--ink-soft);font-size:15px;margin:0 0 12px}
+h2{font-size:22px;margin:0 0 4px}
+.sub{color:var(--ink-soft);font-size:15px;margin:0 0 14px}
+.tiny{font-size:15px;border-radius:var(--r-md);padding:10px 14px;margin:0 0 18px}
+button{font:inherit;cursor:pointer;color:var(--ink)}
+button:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.topbar{display:flex;gap:8px;align-items:center;margin-bottom:6px;flex-wrap:wrap}
+.langsel{font:inherit;font-size:14px;padding:8px 12px;border-radius:8px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink)}
+.ico-btn{width:38px;height:38px;display:flex;align-items:center;justify-content:center;border:1.5px solid var(--line);border-radius:10px;background:var(--paper)}
+
+/* Reward strip — progress that only grows, never punishes */
+.garden{display:flex;align-items:center;gap:6px;flex-wrap:wrap;background:var(--paper);
+  border:1px solid var(--line);border-radius:var(--r-lg);padding:10px 14px;margin-bottom:20px;box-shadow:var(--shadow)}
+.garden .gt{font-size:14px;color:var(--ink-soft);margin-right:4px}
+.garden svg{display:block}
+.plot{width:22px;height:34px;display:flex;align-items:flex-end;justify-content:center;
+  background:linear-gradient(var(--plot1),var(--plot2));border-radius:6px 6px 4px 4px}
+.syncbtn{font-size:13px;padding:6px 12px;border-radius:8px;border:1.5px solid var(--line);
+  background:var(--paper);margin-left:auto}
+.syncbtn+.syncbtn{margin-left:0}
+.sync-pop{display:none;background:var(--paper);border:1px solid var(--line);border-radius:var(--r-md);
+  padding:16px;margin:0 0 20px;box-shadow:var(--shadow)}
+.sync-pop.on{display:block;animation:breathe .4s ease}
+.code-big{font-size:28px;font-variant-numeric:tabular-nums;letter-spacing:2px;
+  background:var(--sage-soft);border:1.5px dashed var(--sage);border-radius:10px;
+  padding:8px 16px;display:inline-block}
+.codein{font:inherit;font-size:24px;width:100px;padding:8px;border:1.5px solid var(--line);
+  border-radius:10px;text-align:center;color:var(--ink);background:var(--paper)}
+.chk{display:flex;align-items:center;gap:8px;font-size:15px}
+.chk input{width:20px;height:20px;accent-color:var(--sage)}
+.themebtn{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:132px;
+  padding:12px;border:2px solid var(--line);border-radius:var(--r-md);background:var(--paper)}
+.themebtn.on{border-color:var(--ink)}
+.themebtn .tico{height:36px;display:flex;align-items:flex-end}
+.swatch{width:30px;height:30px;border-radius:50%;border:2.5px solid transparent;padding:0}
+.swatch.on{border-color:var(--ink)}
+.swatch-auto{width:auto;height:auto;border-radius:8px;padding:8px 12px;border:1.5px solid var(--line);background:var(--paper)}
+
+/* Mission cards — the child chooses where to go (autonomy) */
+.missions-wrap{position:relative;margin:0 -2px 20px}
+.missions{display:flex;gap:8px;overflow-x:auto;padding:8px 28px;position:sticky;top:calc(112px + env(safe-area-inset-top));z-index:20;
+  background:var(--cream);scrollbar-width:none;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 30px,#000 calc(100% - 30px),transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 30px,#000 calc(100% - 30px),transparent)}
+.missions::-webkit-scrollbar{display:none}
+.mnav{position:absolute;top:50%;transform:translateY(-50%);z-index:21;width:30px;height:30px;border-radius:50%;
+  border:1.5px solid var(--line);background:var(--paper);box-shadow:var(--shadow);
+  display:none;align-items:center;justify-content:center;font-size:15px;line-height:1;padding:0}
+.mnav.l{left:2px}
+.mnav.r{right:2px}
+.scrollhint{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:30;
+  background:var(--paper);border:1.5px solid var(--line);border-radius:999px;padding:8px 16px;
+  font-size:14px;color:var(--ink-soft);box-shadow:var(--shadow);display:flex;align-items:center;gap:6px;
+  transition:opacity .3s ease;animation:nudge 1.6s ease-in-out infinite}
+.scrollhint.off{opacity:0;pointer-events:none}
+@keyframes nudge{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,5px)}}
+body.calm .scrollhint{animation:none}
+.mission{flex:0 0 auto;min-width:118px;border:2px solid transparent;border-radius:var(--r-lg);padding:10px 12px;text-align:center;
+  background:var(--paper);box-shadow:var(--shadow);transition:transform .2s ease,border-color .2s ease}
+.mission:hover{transform:translateY(-2px)}
+.mission.on{border-color:var(--ink)}
+.mission .ball{width:20px;height:20px;border-radius:50%;margin:0 auto 6px}
+.mission b{display:block;font-size:15px}
+.mission span{font-size:12px;color:var(--ink-soft)}
+
+.panel{display:none;background:var(--paper);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:22px;box-shadow:var(--shadow);margin-bottom:20px;scroll-margin-top:calc(124px + env(safe-area-inset-top))}
+.panel.on{display:block;animation:breathe .5s ease}
+@keyframes breathe{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes ring{from{box-shadow:0 0 0 0 color-mix(in srgb,var(--blue) 45%,transparent)}to{box-shadow:0 0 0 18px transparent}}
+.panel.flash{display:block;animation:breathe .5s ease,ring 1.1s ease}
+
+/* Per-mission accent hues (user color choice overrides; theme retints) */
+#p-frac{--acc:#5B8DB8}#p-pm{--acc:#9B8AC4}#p-td{--acc:#7FA87F}
+#p-ms{--acc:#DFA651}#p-tl{--acc:#5B8DB8}#p-qz{--acc:#7FA87F}
+body.theme-alpha #p-frac{--acc:#4A6B8A}body.theme-alpha #p-pm{--acc:#7A6A8A}body.theme-alpha #p-td{--acc:#3F6B4F}
+body.theme-alpha #p-ms{--acc:#C98F2E}body.theme-alpha #p-tl{--acc:#4A6B8A}body.theme-alpha #p-qz{--acc:#3F6B4F}
+body.ucolor .panel{--acc:var(--useracc,#5B8DB8)}
+
+.row{display:flex;gap:18px;flex-wrap:wrap}
+.card{border:1px solid var(--line);border-radius:var(--r-md);padding:16px;min-width:250px}
+.ctl{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.btn{padding:9px 14px;border-radius:var(--r-md);border:1px solid var(--line);background:var(--paper);
+  transition:background .2s ease,transform .15s ease}
+.btn:hover{transform:translateY(-1px)}
+.btn.on{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.big{font-size:38px;font-variant-numeric:tabular-nums;letter-spacing:.5px}
+.say{font-size:16px;color:var(--ink-soft);margin-top:10px;max-width:46ch}
+.dots{display:flex;flex-wrap:wrap;gap:7px;margin:14px 0;max-width:360px}
+.dot{width:22px;height:22px;border-radius:50%;background:var(--acc,#5B8DB8);animation:grow .35s ease both}
+.dot.away{opacity:.22}
+.dot.hole{background:transparent;border:2.5px dashed var(--line)}
+@keyframes grow{from{transform:scale(.3);opacity:0}to{transform:scale(1);opacity:1}}
+.grp{display:flex;gap:5px;padding:7px;border:1.5px dashed var(--line);border-radius:10px;margin:0 10px 10px 0}
+.gwrap{display:flex;flex-wrap:wrap}
+.chip{display:inline-block;padding:5px 11px;border-radius:8px;font-size:14px;border:1px solid var(--line);
+  color:var(--ink-soft);margin:0 6px 6px 0;background:var(--cream)}
+.warn{border-radius:var(--r-md);padding:12px 14px;font-size:15px;margin-bottom:12px;
+  background:var(--amber-soft);border:1.5px solid var(--amber)}
+table.tb{border-collapse:collapse;font-size:15px;margin-top:8px;background:var(--paper)}
+.tb td,.tb th{border:1px solid var(--line);padding:6px 14px;text-align:center}
+.tb th{color:var(--ink-soft);font-weight:normal;background:var(--cream)}
+.q{font-size:19px;margin-bottom:14px}
+.opt{display:block;width:100%;text-align:left;padding:12px 14px;margin-bottom:9px;border:1.5px solid var(--line);
+  border-radius:var(--r-md);background:var(--paper);transition:background .2s ease}
+.opt.yes{border-color:var(--sage);background:var(--sage-soft)}
+.opt.nope{border-color:var(--coral);background:var(--coral-soft)}
+.opt:disabled{cursor:default}
+input[type=range]{width:100%;accent-color:var(--blue);margin:14px 0}
+select{font:inherit;padding:10px 12px;border-radius:var(--r-md);border:1.5px solid var(--line);
+  background:var(--paper);color:var(--ink);max-width:100%}
+.fact{font-size:15px;border-radius:var(--r-md);padding:11px 14px;margin-top:10px}
+.note{font-size:13px;color:var(--ink-soft)}
+footer{margin-top:28px;font-size:13px;color:var(--ink-soft);text-align:center}
+.grown{margin-top:26px;background:var(--paper);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:18px 20px;box-shadow:var(--shadow)}
+.grown summary{cursor:pointer;font-size:16px}
+.grown p{font-size:14px;color:var(--ink-soft);margin:10px 0}
+.lbl{font-size:15px;color:var(--ink-soft);width:78px}
+/* More accessibility modes */
+body.hc{--ink:#1f1f1c;--ink-soft:#454540;--line:#8f8f8f}
+body.dark.hc{--ink:#ffffff;--ink-soft:#e4eaf0;--line:#8093a5}
+body.plain{font-family:Arial,Helvetica,sans-serif}
+body.loose{line-height:2.05}
+
+/* ===== Floating persistent header & device polish ===== */
+.topfloat{position:sticky;top:calc(8px + env(safe-area-inset-top));z-index:40;
+  background:color-mix(in srgb,var(--paper) 85%,transparent);
+  -webkit-backdrop-filter:blur(14px) saturate(1.4);backdrop-filter:blur(14px) saturate(1.4);
+  border:1px solid var(--line);border-radius:22px;box-shadow:0 8px 24px rgba(74,74,69,.12);
+  padding:12px 16px;margin:0 0 18px}
+.topfloat .brand{margin:0 0 1px}
+.topfloat h1{margin:0;font-size:24px;letter-spacing:.2px}
+.topfloat .tag{margin:0 0 10px;font-size:14px}
+.topfloat .topbar{margin-bottom:0}
+.btn,.syncbtn,.mission,.themebtn{min-height:44px}
+.mission:active,.btn:active{transform:scale(.97)}
+.panel{box-shadow:0 6px 20px rgba(74,74,69,.08);border-radius:20px}
+.card{border-radius:16px}
+.scrollhint{bottom:calc(14px + env(safe-area-inset-bottom))}
+
+/* iPad & iPad Pro: missions become a centered grid, wider reading column */
+@media (min-width:768px){
+  .topfloat{max-width:860px;margin-left:auto;margin-right:auto}
+  .missions-wrap{max-width:860px;margin:0 auto 20px}
+  .missions{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;overflow:visible;
+    padding:8px 2px;position:static;
+    -webkit-mask-image:none;mask-image:none}
+  .mnav{display:none!important}
+  .panel,.garden,.sync-pop{max-width:840px;margin-left:auto;margin-right:auto}
+}
+@media (min-width:1100px){
+  .missions{grid-template-columns:repeat(6,1fr)}
+}
+
+@media print{
+  .missions-wrap,.ctl,.garden,.grown,.sync-pop,.topbar,.scrollhint{display:none!important}
+  body{background:#fff}
+  .panel{display:block!important;page-break-after:always;border:none;box-shadow:none}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body class="text-m">
+<div class="wrap">
+
+<header class="topfloat">
+<p class="brand">SCN Technologies™</p>
+<h1>Better Math</h1>
+<p class="tag" data-i18n="tag">Grow your brain. Pick your theme. No timers, no scores — just you and the numbers.</p>
+
+<!--
+This Area Of Code Is: The accessibility, theme & language toolbar.
+Explanation: A child or grown-up can pick a language (English/Español), reading options
+(three text sizes, calm mode, extra reading space), a theme — Neutral (garden) or The Alpha
+Male (the farm) — their own accent colors, and dark mode (each theme has its own dark look).
+Every choice is saved on the device and applied before anything else draws.
+In Other Words: Pick your words, your letters, your world, and lights-out — the app
+remembers all of it.
+-->
+<div class="topbar">
+  <select id="langSel" class="langsel" aria-label="language / idioma"></select>
+  <button class="ico-btn" id="themeBtn" aria-label="switch theme" title="theme"></button>
+  <button class="syncbtn" id="setBtn" data-i18n="setBtn" style="margin-left:0">read &amp; language options</button>
+</div>
+</header>
+<div class="sync-pop" id="popSet">
+  <h3 style="margin:0 0 6px;font-size:17px" data-i18n="set_h">Reading &amp; language options</h3>
+  <div class="ctl"><span class="lbl" data-i18n="set_size">Text size</span>
+    <button class="btn sizebtn" data-s="s" style="font-size:13px;padding:6px 11px" aria-label="small text">A</button>
+    <button class="btn sizebtn on" data-s="m" style="font-size:17px;padding:6px 11px" aria-label="medium text">A</button>
+    <button class="btn sizebtn" data-s="l" style="font-size:21px;padding:6px 11px" aria-label="large text">A</button>
+  </div>
+  <div class="ctl"><label class="chk"><input type="checkbox" id="calmChk"> <span data-i18n="set_calm">Calm mode (less motion)</span></label></div>
+  <div class="ctl"><label class="chk"><input type="checkbox" id="wideChk"> <span data-i18n="set_wide">Extra reading space</span></label></div>
+  <div class="ctl"><label class="chk"><input type="checkbox" id="hcChk"> <span data-i18n="set_hc">High contrast</span></label></div>
+  <div class="ctl"><label class="chk"><input type="checkbox" id="plainChk"> <span data-i18n="set_plain">Plain letters (easier for some readers)</span></label></div>
+  <div class="ctl"><label class="chk"><input type="checkbox" id="looseChk"> <span data-i18n="set_loose">Loose lines (more line spacing)</span></label></div>
+  <div class="ctl" style="flex-direction:column;align-items:flex-start;gap:10px;margin-top:14px">
+    <span class="lbl" data-i18n="set_theme">Theme</span>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="themebtn" data-t="neutral"><span class="tico" id="icoNeutral"></span><span data-i18n="theme_neutral">Neutral</span></button>
+      <button class="themebtn" data-t="alpha"><span class="tico" id="icoAlpha"></span><span data-i18n="theme_alpha">The Alpha Male</span></button>
+    </div>
+  </div>
+  <div class="ctl" style="flex-direction:column;align-items:flex-start;gap:10px">
+    <span class="lbl" data-i18n="set_color">Pick your colors</span>
+    <div id="swatches" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"></div>
+  </div>
+  <div class="ctl" style="margin-top:14px"><label class="chk"><input type="checkbox" id="darkChk"> <span data-i18n="set_dark">Dark mode</span></label></div>
+  <p class="note" data-i18n="set_darknote">You can turn dark mode on and off here anytime — each theme has its own night look.</p>
+</div>
+
+<!--
+This Area Of Code Is: The reward strip — garden flowers or farm crops, now with sync.
+Explanation: Every correct answer grows one reward here — a flower in Neutral, a crop in
+The Alpha Male. Nothing ever disappears; the strip can only grow. Two buttons pack it up
+and move it between devices: a short code, or a shareable file (AirDrop on Apple devices).
+In Other Words: Every right answer plants something living — flowers or food — and it can
+travel to your other device whenever you want.
+-->
+<div class="garden"><span class="gt" id="gtLabel" data-i18n="gt">My garden</span><span id="gardenRow"></span>
+  <button class="syncbtn" id="syncSend" data-i18n="send">send my garden &#10148;</button>
+  <button class="syncbtn" id="syncRecv" data-i18n="recv">get my garden</button></div>
+
+<div class="sync-pop" id="popSend">
+  <h3 style="margin:0 0 6px;font-size:17px" data-i18n="ps_h">Send my progress to another device</h3>
+  <p class="say" style="margin-top:0" data-i18n="ps_code">Your garden code is:</p>
+  <div class="code-big" id="sendCode"></div>
+  <p class="note" style="margin-top:12px" data-i18n="ps_note">On your other device, open Better Math, tap "get my garden," and type this code. Or share the progress file (AirDrop loves this):</p>
+  <button class="btn" id="shareFile" data-i18n="ps_share">share progress file</button>
+  <p class="note" id="shareMsg"></p>
+</div>
+
+<div class="sync-pop" id="popRecv">
+  <h3 style="margin:0 0 6px;font-size:17px" data-i18n="pr_h">Get my progress on this device</h3>
+  <p class="say" style="margin-top:0" data-i18n="pr_type">Type the garden code from your other device:</p>
+  <div class="ctl"><input id="recvInput" class="codein" inputmode="numeric" pattern="[0-9]*" placeholder="0-12" aria-label="garden code">
+  <button class="btn" id="recvGo" data-i18n="pr_go">plant it here</button></div>
+  <p class="note" data-i18n="pr_or">…or open a progress file that was shared with you:</p>
+  <button class="btn" id="recvFile" data-i18n="pr_file">open progress file</button>
+  <input type="file" id="impFile" accept=".json,application/json" style="display:none">
+  <p class="say" id="recvMsg" aria-live="polite"></p>
+</div>
+
+<!--
+This Area Of Code Is: The mission picker — the home screen.
+Explanation: The child chooses any mission in any order. Autonomy is what turns "work"
+into "my adventure."
+In Other Words: You pick where to play. Your choice, your adventure.
+-->
+<div class="missions-wrap">
+<div class="missions" id="missions"></div>
+<button class="mnav l" id="mnavL" data-i18n-aria="mnav_l" aria-label="scroll missions left">&#8249;</button>
+<button class="mnav r" id="mnavR" data-i18n-aria="mnav_r" aria-label="scroll missions right">&#8250;</button>
+</div>
+
+<!--
+This Area Of Code Is: The fractions mission — fair shares with a pizza.
+In Other Words: Cut the pizza fair, take one piece — that's a fraction!
+-->
+<section class="panel" id="p-frac">
+  <h2 data-i18n="f_h">Fractions are fair shares</h2>
+  <p class="sub" data-i18n="f_sub">A fraction tells how we split one whole thing into equal pieces.</p>
+  <p class="tiny" style="background:var(--blue-ghost)" data-i18n="f_tiny">Tiny words: half means "we each get the same." Fair is fun.</p>
+  <div class="row">
+    <div class="card">
+      <div class="ctl" id="fracBtns">
+        <button class="btn on" data-n="2" data-i18n="f_2">halves</button>
+        <button class="btn" data-n="3" data-i18n="f_3">thirds</button>
+        <button class="btn" data-n="4" data-i18n="f_4">quarters</button>
+        <button class="btn" data-n="8" data-i18n="f_8">eighths</button>
+      </div>
+      <svg id="fracSvg" viewBox="0 0 200 234" width="230" role="img" aria-label="pizza fraction picture"></svg>
+    </div>
+    <div class="card" style="flex:1">
+      <div class="big" id="fracBig">1/2</div>
+      <p class="say" id="fracSay" aria-live="polite"></p>
+      <div id="fracDec" style="margin-top:10px"></div>
+      <div style="margin-top:14px">
+        <span class="chip">2/2 = 1</span><span class="chip">1/2 = 2/4</span>
+        <span class="chip">4/8 = 1/2</span><span class="chip">3/4 &gt; 1/2</span>
+        <span class="chip">3/4 &gt; 2/3</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--
+This Area Of Code Is: The plus & minus mission.
+In Other Words: Watch the dots join up, or gently float away.
+-->
+<section class="panel" id="p-pm">
+  <h2 data-i18n="pm_h">Plus and minus</h2>
+  <p class="sub" data-i18n="pm_sub">Plus puts things together. Minus takes things away.</p>
+  <p class="tiny" style="background:var(--lav-soft)" data-i18n="pm_tiny">Tiny words: plus means more, minus means eat one!</p>
+  <div class="row">
+    <div class="card">
+      <div class="ctl">
+        <button class="btn on" id="pmAdd" data-i18n="pm_put">put together</button>
+        <button class="btn" id="pmSub" data-i18n="pm_take">take away</button>
+      </div>
+      <div class="ctl"><span class="lbl" data-i18n="pm_start">Start</span>
+        <button class="btn st" data-t="pmA" data-d="-1" aria-label="less">−</button>
+        <b class="big" id="pmA" style="font-size:24px">6</b>
+        <button class="btn st" data-t="pmA" data-d="1" aria-label="more">+</button></div>
+      <div class="ctl"><span class="lbl" data-i18n="pm_change">Change</span>
+        <button class="btn st" data-t="pmB" data-d="-1" aria-label="less">−</button>
+        <b class="big" id="pmB" style="font-size:24px">4</b>
+        <button class="btn st" data-t="pmB" data-d="1" aria-label="more">+</button></div>
+    </div>
+    <div class="card" style="flex:1">
+      <div class="dots" id="pmDots1"></div>
+      <div class="dots" id="pmDots2"></div>
+      <div class="big" id="pmBig" style="font-size:30px"></div>
+      <p class="say" id="pmSay" aria-live="polite"></p>
+    </div>
+  </div>
+</section>
+
+<!--
+This Area Of Code Is: The times & divide mission.
+In Other Words: Times makes piles. Divide hands them out fair and square.
+-->
+<section class="panel" id="p-td">
+  <h2 data-i18n="td_h">Times &amp; divide</h2>
+  <p class="sub" data-i18n="td_sub">Times makes equal groups. Divide shares things fairly.</p>
+  <p class="tiny" style="background:var(--sage-soft)" data-i18n="td_tiny">Tiny words: times means lots of groups. Divide means everyone gets the same.</p>
+  <div class="row">
+    <div class="card">
+      <div class="ctl">
+        <button class="btn on" id="tdTimes" data-i18n="td_groups">groups (×)</button>
+        <button class="btn" id="tdDiv" data-i18n="td_share">fair share (÷)</button>
+      </div>
+      <div class="ctl"><span class="lbl" data-i18n="td_first">First</span>
+        <button class="btn st" data-t="tdA" data-d="-1" aria-label="less">−</button>
+        <b class="big" id="tdA" style="font-size:24px">3</b>
+        <button class="btn st" data-t="tdA" data-d="1" aria-label="more">+</button></div>
+      <div class="ctl"><span class="lbl" data-i18n="td_second">Second</span>
+        <button class="btn st" data-t="tdB" data-d="-1" aria-label="less">−</button>
+        <b class="big" id="tdB" style="font-size:24px">4</b>
+        <button class="btn st" data-t="tdB" data-d="1" aria-label="more">+</button></div>
+    </div>
+    <div class="card" style="flex:1">
+      <div class="gwrap" id="tdGroups" aria-label="groups of dots"></div>
+      <div class="big" id="tdBig" style="font-size:30px"></div>
+      <p class="say" id="tdSay" aria-live="polite"></p>
+    </div>
+  </div>
+</section>
+
+<!--
+This Area Of Code Is: The measure mission — a two-way converter with body rulers.
+In Other Words: Your body is the ruler.
+-->
+<section class="panel" id="p-ms">
+  <h2 data-i18n="ms_h">How big is it?</h2>
+  <p class="sub" data-i18n="ms_sub">Metric is used almost everywhere. Inches and feet are used in the USA.</p>
+  <p class="tiny" style="background:var(--amber-soft)" data-i18n="ms_tiny">Tiny words: your thumb is an inch. A giant step is a meter. A bag of sugar is a kilogram.</p>
+  <div class="card">
+    <select id="msSel" aria-label="measurement pair"></select>
+    <input type="range" id="msR" aria-label="value">
+    <div class="big" id="msOut" style="font-size:26px" aria-live="polite"></div>
+    <div class="fact" id="msFact" style="background:var(--amber-soft)" aria-live="polite"></div>
+  </div>
+</section>
+
+<!--
+This Area Of Code Is: The tools mission — metric vs. SAE for young helpers.
+In Other Words: Blue numbers and fractions are different families — don't mix them up.
+-->
+<section class="panel" id="p-tl">
+  <h2 data-i18n="tl_h">Metric vs. SAE tools</h2>
+  <p class="sub" data-i18n="tl_sub">Wrenches come in two families. They look almost the same — but almost is not exact.</p>
+  <p class="tiny" style="background:var(--blue-ghost)" data-i18n="tl_tiny">Tiny words: millimeter numbers go together. Fractions like 1/2 go together.</p>
+  <div class="row">
+    <div class="card">
+      <div class="warn" data-i18n="tl_warn">Careful: the wrong system can round off a bolt. When in doubt, use the exact size.</div>
+      <table class="tb">
+        <tr><th>Metric</th><th>SAE ≈</th></tr>
+        <tr><td>4 mm</td><td>5/32"</td></tr>
+        <tr><td>6 mm</td><td>1/4"</td></tr>
+        <tr><td>8 mm</td><td>5/16"</td></tr>
+        <tr><td>10 mm</td><td>3/8"</td></tr>
+        <tr><td>13 mm</td><td>1/2"</td></tr>
+        <tr><td>14 mm</td><td>9/16"</td></tr>
+        <tr><td>16 mm</td><td>5/8"</td></tr>
+        <tr><td>19 mm</td><td>3/4"</td></tr>
+      </table>
+      <p class="say" data-i18n="tl_closest">Closest fits, not exact matches.</p>
+    </div>
+    <div class="card" style="flex:1">
+      <p class="say" style="margin-top:0" data-i18n="tl_spot">Spot the difference before grabbing a tool:</p>
+      <div style="margin-top:8px">
+        <span class="chip" data-i18n="tl_c1">Metric bolts: numbers like 8.8 or 10.9</span>
+        <span class="chip" data-i18n="tl_c2">SAE bolts: fractions like 1/2 or 5/8</span>
+      </div>
+      <div style="margin-top:12px">
+        <span class="chip" data-i18n="tl_c3">Metric = most modern cars, European &amp; Asian vehicles, electronics</span>
+        <span class="chip" data-i18n="tl_c4">SAE = classic American cars, older machines, lumber</span>
+      </div>
+      <p class="say" data-i18n="tl_tip">Tip: digital calipers switch between metric and SAE instantly.</p>
+    </div>
+  </div>
+</section>
+
+<!--
+This Area Of Code Is: The gentle challenge — questions that grow the reward.
+In Other Words: Right answers plant living things. Wrong answers just mean "try again."
+-->
+<section class="panel" id="p-qz">
+  <h2 data-i18n="qz_h">Grow the garden</h2>
+  <p class="sub" data-i18n="qz_sub">Five questions. Every right answer grows a flower. Wrong answers are welcome — mistakes are how brains grow.</p>
+  <div class="card" id="qzBox"></div>
+</section>
+
+<!--
+This Area Of Code Is: The grown-ups note — the science behind the calm design.
+In Other Words: This page explains to moms and dads why everything is so soft and kind.
+-->
+<details class="grown">
+  <summary>For grown-ups: the science behind this page</summary>
+  <p><b style="color:var(--ink)">Color.</b> Research on children's cognition found that red hampered performance on cognitive tasks by roughly 6% relative to grey, while no other color hurt — and blue environments support relaxed, creative thinking (Andrew Elliot's line of research). Green is the color of restoration: attention-restoration studies show even brief contact with green/nature refocuses a tired mind. That is why every palette here — light or dark, garden or farm — keeps warm low-glare surfaces, blue/green anchors, amber warmth, and reserves red-family tones for gentle "try again" moments only.</p>
+  <p><b style="color:var(--ink)">Rewards.</b> Lepper, Greene &amp; Nisbett (1973) showed that expected tangible rewards halved preschoolers' voluntary drawing afterward — the famous overjustification effect. A 1999 meta-analysis of 128 experiments (Deci, Koestner &amp; Ryan) confirmed: expected tangible rewards reduce intrinsic motivation, while verbal encouragement increases it. So there are no points, stars-to-keep, streaks, timers, or prizes here — only living things that grow and words like "you figured it out."</p>
+  <p><b style="color:var(--ink)">Mistakes.</b> Wrong answers never cost anything and can always be retried. A brain that is not afraid of being wrong is a brain that keeps trying — that is the entire goal.</p>
+  <p><b style="color:var(--ink)">Themes.</b> Themes change the world, never the math. Neutral tends a garden; The Alpha Male works a farm — same calm colors in earth and crop tones, same gentle rules. Letting a child choose his world is autonomy, and autonomy feeds motivation.</p>
+  <p><b style="color:var(--ink)">Sync between devices.</b> Progress is saved privately on each device. To move it: tap "send my garden" for a short code, or share the progress file — AirDrop from iPhone to iPad is the smoothest path. For the best experience on Apple devices, host this file (a free Netlify site works) and use "Add to Home Screen" on each device; then it opens fullscreen like a real app, and Control Center &#8594; Screen Mirroring puts it on the TV.</p>
+  <p class="note">After a challenge round, encourage a one-minute "green break" — look out a window. It genuinely refocuses young attention.</p>
+</details>
+
+<!--
+This Area Of Code Is: The resources & credits section.
+In Other Words: Everyone gets named for what they made, fair and square.
+-->
+<details class="grown" id="resources">
+  <summary>Resources &amp; credits</summary>
+  <p><b style="color:var(--ink)">Chart content.</b> The reference material — addition, subtraction, multiplication, and division tables; metric and imperial conversions; metric ↔ SAE tool equivalents; and fraction–decimal equivalents — consists of standard mathematical facts taught in schools everywhere. Facts themselves belong to no one, which is why every classroom uses them freely.</p>
+  <p><b style="color:var(--ink)">Chart designs.</b> The selection, arrangement, wording, illustrations, and calm color system of these charts are the original creative work of Frederick Thomas. © 2026 Frederick Thomas. All rights reserved. Used with permission in this app.</p>
+  <p><b style="color:var(--ink)">This app.</b> Better Math, its reward system, themes, and interactive design are © 2026 SCN Technologies™, a DBA of SCN Holdings.</p>
+  <p><b style="color:var(--ink)">Trademarks.</b> SCN Technologies™ and Better Math™ are trademarks of SCN Holdings. The chart designs remain the intellectual property of Frederick Thomas — a deliberately separate credit from the SCN business.</p>
+  <p><b style="color:var(--ink)">Color &amp; learning science.</b> Design choices were informed by published research, including Andrew Elliot's work on color and performance, Lepper, Greene &amp; Nisbett (1973) on rewards and intrinsic motivation, and Deci, Koestner &amp; Ryan (1999) on self-determination.</p>
+</details>
+
+<div class="scrollhint off" id="scrollHint"><span data-i18n="scroll_more">scroll for more</span> <span aria-hidden="true">&#9662;</span></div>
+
+<footer>Chart designs © 2026 Frederick Thomas · Used with permission · Better Math app © 2026 SCN Technologies™ (SCN Holdings) · SCN Technologies™ and Better Math™ are trademarks of SCN Holdings</footer>
+</div>
+
+<script>
+/*
+This Area Of Code Is: Language, themes & accessibility — settings, dictionary, application.
+Explanation: Every visible string lives in one dictionary (English + Spanish; adding a
+third language = copying one block). Themes are body classes that swap the whole palette:
+Neutral (garden) and The Alpha Male (farm), each with its own dark variant. The user can
+also pick their own accent color (overrides mission hues) and flip dark mode. Text size,
+calm mode, and reading space ride along. All of it saves beside the progress and applies
+before first paint; aria-live regions announce feedback to screen readers.
+In Other Words: Pick your words, your world, your colors, and lights-out. The app listens.
+*/
+var $=function(s){return document.querySelector(s)};
+var $$=function(s){return Array.prototype.slice.call(document.querySelectorAll(s))};
+var rnd=function(a,b){return Math.floor(Math.random()*(b-a+1))+a};
+var pick=function(a){return a[Math.floor(Math.random()*a.length)]};
+var r2=function(v){return Math.round(v*100)/100};
+var shuffle=function(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a};
+var ES=function(){return LANG==="es"};
+var L=function(k){if(LANG==="es")return I18N.es[k]||I18N.en[k]||k;if(LANG==="en")return I18N.en[k]||k;return (TDICT&&TDICT[k])||I18N.en[k]||k};
+
+var I18N={
+en:{
+tag:"Grow your brain. Pick your theme. No timers, no scores — just you and the numbers.",
+gt:"My garden",gt_alpha:"My farm",send:"send my progress &#10148;",recv:"get my progress",
+setBtn:"read &amp; language options",set_h:"Reading, theme &amp; language options",set_size:"Text size",
+set_calm:"Calm mode (less motion)",set_wide:"Extra reading space",set_hc:"High contrast",set_plain:"Plain letters (easier for some readers)",set_loose:"Loose lines (more line spacing)",
+set_theme:"Theme",set_color:"Pick your colors",set_auto:"auto",
+set_dark:"Dark mode",set_darknote:"You can turn dark mode on and off here anytime — each theme has its own night look.",
+theme_neutral:"Neutral",theme_alpha:"The Alpha Male",
+mnav_l:"scroll missions left",mnav_r:"scroll missions right",scroll_more:"scroll for more",
+f_h:"Fractions are fair shares",f_sub:"A fraction tells how we split one whole thing into equal pieces.",
+f_tiny:"Tiny words: half means &quot;we each get the same.&quot; Fair is fun.",
+f_2:"halves",f_3:"thirds",f_4:"quarters",f_8:"eighths",cap:"1 pizza cut into ",
+pm_h:"Plus and minus",pm_sub:"Plus puts things together. Minus takes things away.",
+pm_tiny:"Tiny words: plus means more, minus means eat one!",pm_put:"put together",pm_take:"take away",pm_start:"Start",pm_change:"Change",
+td_h:"Times &amp; divide",td_sub:"Times makes equal groups. Divide shares things fairly.",
+td_tiny:"Tiny words: times means lots of groups. Divide means everyone gets the same.",
+td_groups:"groups (×)",td_share:"fair share (÷)",td_first:"First",td_second:"Second",
+ms_h:"How big is it?",ms_sub:"Metric is used almost everywhere. Inches and feet are used in the USA.",
+ms_tiny:"Tiny words: your thumb is an inch. A giant step is a meter. A bag of sugar is a kilogram.",
+tl_h:"Metric vs. SAE tools",tl_sub:"Wrenches come in two families. They look almost the same — but almost is not exact.",
+tl_tiny:"Tiny words: millimeter numbers go together. Fractions like 1/2 go together.",
+tl_warn:"Careful: the wrong system can round off a bolt. When in doubt, use the exact size.",
+tl_closest:"Closest fits, not exact matches.",tl_spot:"Spot the difference before grabbing a tool:",
+tl_c1:"Metric bolts: numbers like 8.8 or 10.9",tl_c2:"SAE bolts: fractions like 1/2 or 5/8",
+tl_c3:"Metric = most modern cars, European &amp; Asian vehicles, electronics",
+tl_c4:"SAE = classic American cars, older machines, lumber",
+tl_tip:"Tip: digital calipers switch between metric and SAE instantly.",
+qz_h:"Grow the garden",qz_sub:"Five questions. Every right answer grows a flower. Wrong answers are welcome — mistakes are how brains grow.",
+ps_h:"Send my progress to another device",ps_code:"Your garden code is:",
+ps_note:"On your other device, open Better Math, tap &quot;get my progress,&quot; and type this code. Or share the progress file (AirDrop loves this):",
+ps_share:"share progress file",
+pr_h:"Get my progress on this device",pr_type:"Type the garden code from your other device:",
+pr_go:"plant it here",pr_or:"…or open a progress file that was shared with you:",pr_file:"open progress file",
+q_of:"Question {n} of 5",q_right:"You figured it out — nice thinking! ",
+q_try:"Hmm — look at the numbers and try again. You can do it!",q_hint:"Hint: ",
+done_h:"Your garden grew today.",
+done_p:"Great brains need quiet after hard thinking. Try a one-minute green break: look out a window at something green or growing. It really does refocus your mind.",
+again:"grow more",next:"next question",see:"see my progress",
+badcode:"Hmm, the code is a number from 0 to 12.",
+sentok:"Sent! On the other device open Better Math, tap “get my progress” → “open progress file.”",
+cancelled:"Sharing cancelled — nothing was sent.",
+downloaded:"Downloaded. AirDrop the file to your other device, then use “open progress file” there.",
+received:"Progress received — {n} grown. Welcome back!",notmg:"That file does not look like a Better Math file.",
+cantread:"Could not read that file — please try again.",
+feel0:"Freezing — that is ice!",feel1:"Chilly — wear a jacket.",feel2:"Just right — perfect play-outside weather.",
+feel3:"Warm — drink water and find shade.",
+mstail:" Water freezes at 0 °C (32 °F). Room temperature is about 20 °C (68 °F)."
+},
+es:{
+tag:"Haz crecer tu cerebro. Elige tu tema. Sin cronómetro ni puntos — solo tú y los números.",
+gt:"Mi jardín",gt_alpha:"Mi granja",send:"enviar mi progreso &#10148;",recv:"traer mi progreso",
+setBtn:"opciones de lectura e idioma",set_h:"Opciones de lectura, tema e idioma",set_size:"Tamaño de letra",
+set_calm:"Modo tranquilo (menos movimiento)",set_wide:"Espacio extra para leer",set_hc:"Alto contraste",set_plain:"Letras simples",set_loose:"Líneas separadas",
+set_theme:"Tema",set_color:"Elige tus colores",set_auto:"automático",
+set_dark:"Modo oscuro",set_darknote:"Puedes encender y apagar el modo oscuro aquí cuando quieras — cada tema tiene su propia noche.",
+theme_neutral:"Neutral",theme_alpha:"The Alpha Male",
+mnav_l:"desliza los juegos a la izquierda",mnav_r:"desliza los juegos a la derecha",scroll_more:"baja para ver más",
+f_h:"Las fracciones son partes justas",f_sub:"Una fracción dice cómo partimos algo entero en piezas iguales.",
+f_tiny:"Palabritas: mitad significa &quot;cada quien recibe lo mismo&quot;. Lo justo es divertido.",
+f_2:"mitades",f_3:"tercios",f_4:"cuartos",f_8:"octavos",cap:"1 pizza cortada en ",
+pm_h:"Sumar y restar",pm_sub:"Sumar junta cosas. Restar quita cosas.",
+pm_tiny:"Palabritas: sumar es tener más; restar es ¡comerte una!",pm_put:"juntar",pm_take:"quitar",pm_start:"Empiezo",pm_change:"Cambio",
+td_h:"Multiplicar y dividir",td_sub:"Multiplicar hace grupos iguales. Dividir reparte con justicia.",
+td_tiny:"Palabritas: multiplicar es muchos grupos; dividir es que todos reciban lo mismo.",
+td_groups:"grupos (×)",td_share:"repartir (÷)",td_first:"Primero",td_second:"Segundo",
+ms_h:"¿Qué tan grande es?",ms_sub:"El sistema métrico se usa casi en todas partes. Pulgadas y pies se usan en EE. UU.",
+ms_tiny:"Palabritas: tu pulgar es una pulgada. Un paso gigante es un metro. Una bolsa de azúcar es un kilogramo.",
+tl_h:"Herramientas: métrico vs. SAE",tl_sub:"Las llaves vienen en dos familias. Se ven casi iguales — pero casi no es exacto.",
+tl_tiny:"Palabritas: los milímetros van juntos. Las fracciones como 1/2 van juntas.",
+tl_warn:"Ojo: el sistema equivocado puede dañar un tornillo. Si dudas, usa la medida exacta.",
+tl_closest:"Las medidas más cercanas, no exactas.",tl_spot:"Mira la diferencia antes de agarrar una herramienta:",
+tl_c1:"Tornillos métricos: números como 8.8 o 10.9",tl_c2:"Tornillos SAE: fracciones como 1/2 o 5/8",
+tl_c3:"Métrico = autos modernos, vehículos europeos y asiáticos, electrónica",
+tl_c4:"SAE = autos americanos clásicos, maquinaria vieja, madera",
+tl_tip:"Tip: las pinzas digitales cambian entre métrico y SAE al instante.",
+qz_h:"Haz crecer el jardín",qz_sub:"Cinco preguntas. Cada respuesta correcta hace crecer una flor. Los errores son bienvenidos — así crece el cerebro.",
+ps_h:"Envía tu progreso a otro aparato",ps_code:"Tu código de jardín es:",
+ps_note:"En tu otro aparato, abre Better Math, toca «traer mi progreso» y escribe este código. O comparte el archivo de progreso (AirDrop es ideal):",
+ps_share:"compartir archivo de progreso",
+pr_h:"Trae tu progreso a este aparato",pr_type:"Escribe el código del jardín de tu otro aparato:",
+pr_go:"plantarlo aquí",pr_or:"…o abre un archivo de progreso que te compartieron:",pr_file:"abrir archivo de progreso",
+q_of:"Pregunta {n} de 5",q_right:"¡Lo descubriste — qué buen pensamiento! ",
+q_try:"Hmm — mira los números e inténtalo de nuevo. ¡Tú puedes!",q_hint:"Pista: ",
+done_h:"Tu jardín creció hoy.",
+done_p:"Los cerebros grandes necesitan calma después de pensar mucho. Tómate un «descanso verde» de un minuto: mira algo verde por la ventana. De verdad aclara la mente.",
+again:"hacer crecer más",next:"siguiente pregunta",see:"ver mi progreso",
+badcode:"Hmm, el código es un número de 0 a 12.",
+sentok:"¡Enviado! En el otro aparato abre Better Math, toca «traer mi progreso» → «abrir archivo de progreso».",
+cancelled:"Envío cancelado — no se envió nada.",
+downloaded:"Descargado. Envía el archivo por AirDrop a tu otro aparato y allá usa «abrir archivo de progreso».",
+received:"¡Progreso recibido — {n} cultivados! ¡Bienvenido de nuevo!",notmg:"Ese archivo no parece de Better Math.",
+cantread:"No pude leer ese archivo — inténtalo de nuevo.",
+feel0:"¡Congelante — eso es hielo!",feel1:"Fresco — ponte una chamarra.",feel2:"Perfecto — clima ideal para jugar fuera.",
+feel3:"Caluroso — toma agua y busca sombra.",
+mstail:" El agua se congela a 0 °C (32 °F). La temperatura ambiente es de unos 20 °C (68 °F)."
+}};
+
+var LANGS=[["en","English"],["es","Español"],["fr","Français"],["de","Deutsch"],["it","Italiano"],["pt","Português"],["pt-BR","Português (Brasil)"],["nl","Nederlands"],["sv","Svenska"],["no","Norsk"],["da","Dansk"],["fi","Suomi"],["is","Íslenska"],["pl","Polski"],["cs","Čeština"],["sk","Slovenčina"],["sl","Slovenščina"],["hu","Magyar"],["ro","Română"],["bg","Български"],["hr","Hrvatski"],["sr","Српски"],["el","Ελληνικά"],["tr","Türkçe"],["uk","Українська"],["ru","Русский"],["he","עברית"],["ar","العربية"],["fa","فارسی"],["ur","اردو"],["hi","हिन्दी"],["bn","বাংলা"],["ta","தமிழ்"],["te","తెలుగు"],["kn","ಕನ್ನಡ"],["ml","മലയാളം"],["mr","मराठी"],["gu","ગુજરાતી"],["pa","ਪੰਜਾਬੀ"],["ne","नेपाली"],["si","සිංහල"],["th","ไทย"],["vi","Tiếng Việt"],["id","Bahasa Indonesia"],["ms","Bahasa Melayu"],["tl","Filipino"],["sw","Kiswahili"],["af","Afrikaans"],["zu","isiZulu"],["xh","isiXhosa"],["yo","Yorùbá"],["ig","Igbo"],["ha","Hausa"],["am","አማርኛ"],["rw","Kinyarwanda"],["ja","日本語"],["ko","한국어"],["zh-CN","中文（简体）"],["zh-TW","中文（繁體）"],["ca","Català"],["eu","Euskara"],["gl","Galego"]];
+var RTL=["he","ar","fa","ur"];
+var MT_OK=(typeof fetch==="function");
+var TDICT=null;
+var SCACHE={};
+function mtTranslate(lang,text,cb){
+  if(!MT_OK||!text)return cb(text);
+  fetch("https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl="+encodeURIComponent(lang)+"&dt=t&q="+encodeURIComponent(text))
+    .then(function(r){return r.json()})
+    .then(function(j){try{cb((j[0]||[]).map(function(s){return s[0]}).join(""))}catch(e){cb(text)}})
+    .catch(function(){cb(text)});
+}
+function loadTDict(lang,done){
+  var ck="bmT_"+lang;
+  try{var c=localStorage.getItem(ck);if(c){TDICT=JSON.parse(c);done();return}}catch(e){}
+  if(!MT_OK){done();return}
+  var keys=Object.keys(I18N.en),vals=keys.map(function(k){return I18N.en[k]});
+  mtTranslate(lang,vals.join("\n"),function(out){
+    var parts=String(out).split("\n"),d={};
+    keys.forEach(function(k,i){d[k]=(parts[i]!==undefined&&parts[i]!=="")?parts[i]:I18N.en[k]});
+    TDICT=d;try{localStorage.setItem(ck,JSON.stringify(d))}catch(e){}
+    done();
+  });
+}
+function refreshDynamics(){
+  if(!window.__bmReady)return;
+  buildMissions();mnavUpdate();
+  drawFrac(S.fracN);renderPM();renderTD();
+  msBuild();msInit();applySet();
+  if($("#p-qz").classList.contains("on"))qzRender();
+}
+function OUT(s){
+  if(LANG==="es"||LANG==="en"||!s)return s;
+  if(!SCACHE[LANG]){try{SCACHE[LANG]=JSON.parse(localStorage.getItem("bmS_"+LANG)||"{}")}catch(e){SCACHE[LANG]={}}}
+  if(SCACHE[LANG][s])return SCACHE[LANG][s];
+  if(!OUT.pend)OUT.pend={};
+  if(OUT.pend[s])return s;
+  OUT.pend[s]=1;
+  mtTranslate(LANG,s,function(t){
+    if(t&&t!==s){SCACHE[LANG][s]=t;OUT.pend[s]=0;
+      try{localStorage.setItem("bmS_"+LANG,JSON.stringify(SCACHE[LANG]))}catch(e){}
+      refreshDynamics();}
+  });
+  return s;
+}
+
+var SET={lang:"en",size:"m",calm:false,wide:false,theme:"neutral",color:"auto",dark:false,hc:false,plain:false,loose:false};
+try{var sv=JSON.parse(localStorage.getItem("bmSettings")||"{}");for(var k in sv)SET[k]=sv[k]}catch(e){}
+var LANG=(SET.lang&&LANGS.some(function(l){return l[0]===SET.lang}))?SET.lang:"en";
+function saveSet(){try{localStorage.setItem("bmSettings",JSON.stringify(SET))}catch(e){}}
+function applySet(){
+  document.body.className="text-"+SET.size+(SET.calm?" calm":"")+(SET.wide?" wide":"")
+    +" theme-"+SET.theme+(SET.dark?" dark":"")+(SET.color!=="auto"?" ucolor":"")+(SET.hc?" hc":"")+(SET.plain?" plain":"")+(SET.loose?" loose":"");
+  if(SET.color!=="auto")document.body.style.setProperty("--useracc",SET.color);
+  else document.body.style.removeProperty("--useracc");
+  $$(".sizebtn").forEach(function(b){b.classList.toggle("on",b.dataset.s===SET.size)});
+  $$(".themebtn").forEach(function(b){b.classList.toggle("on",b.dataset.t===SET.theme)});
+  $("#calmChk").checked=SET.calm;$("#wideChk").checked=SET.wide;$("#darkChk").checked=SET.dark;$("#hcChk").checked=SET.hc;$("#plainChk").checked=SET.plain;$("#looseChk").checked=SET.loose;
+  $$(".swatch").forEach(function(b){b.classList.toggle("on",b.dataset.c===SET.color)});
+  document.documentElement.lang=LANG;
+  $("#gtLabel").innerHTML=SET.theme==="alpha"?L("gt_alpha"):L("gt");
+  renderGarden();
+}
+$$(".sizebtn").forEach(function(b){b.onclick=function(){SET.size=b.dataset.s;saveSet();applySet()}});
+$("#calmChk").onchange=function(){SET.calm=this.checked;saveSet();applySet()};
+$("#wideChk").onchange=function(){SET.wide=this.checked;saveSet();applySet()};
+$("#hcChk").onchange=function(){SET.hc=this.checked;saveSet();applySet()};
+$("#plainChk").onchange=function(){SET.plain=this.checked;saveSet();applySet()};
+$("#looseChk").onchange=function(){SET.loose=this.checked;saveSet();applySet()};
+$("#darkChk").onchange=function(){SET.dark=this.checked;saveSet();applySet()};
+$$(".themebtn").forEach(function(b){b.onclick=function(){SET.theme=b.dataset.t;saveSet();applySet()}});
+$("#setBtn").onclick=function(){
+  ["popSend","popRecv"].forEach(function(id){$("#"+id).classList.remove("on")});
+  $("#popSet").classList.toggle("on");
+};
+
+/* Color swatches */
+var SWATCHES=["#5B8DB8","#7FA87F","#DFA651","#9B8AC4","#B05C44","#4A6B8A"];
+(function(){
+  var w=$("#swatches");
+  var auto=document.createElement("button");
+  auto.className="btn swatch-auto";auto.dataset.c="auto";auto.textContent=L("set_auto");
+  auto.onclick=function(){SET.color="auto";saveSet();applySet()};
+  w.appendChild(auto);
+  SWATCHES.forEach(function(c){
+    var b=document.createElement("button");
+    b.className="swatch";b.dataset.c=c;b.style.background=c;b.setAttribute("aria-label","color "+c);
+    b.onclick=function(){SET.color=c;saveSet();applySet()};
+    w.appendChild(b);
+  });
+})();
+
+/*
+This Area Of Code Is: Rewards — flowers for Neutral, crops for The Alpha Male — plus sync.
+Explanation: The state is just a count (0-12), so the whole thing fits in a tiny code
+("MG1-<count>") typed on another device, or a small JSON file shared via the share sheet
+(AirDrop). Neutral draws a blossom; The Alpha Male draws a wheat crop rising from tilled
+soil — growing food, doing the work. No accounts, no servers, no cloud.
+In Other Words: Right answers plant living things — pretty flowers or honest food — and
+they can travel to your other device in a code or an AirDrop.
+*/
+var FCOLORS=["#5B8DB8","#7FA87F","#DFA651","#9B8AC4","#DE8B70","#6FA8B8"];
+var ACOLORS=["#3F6B4F","#4A6B8A","#C98F2E","#8A6B4F","#B05C44","#6B7A4F"];
+function COLORS(){return SET.theme==="alpha"?ACOLORS:FCOLORS}
+var garden=[];
+try{garden=JSON.parse(localStorage.getItem("mathGarden")||"[]")}catch(e){garden=[]}
+function saveGarden(){try{localStorage.setItem("mathGarden",JSON.stringify(garden))}catch(e){}}
+function flowerSVG(color){
+  var p="",i,a;
+  for(i=0;i<5;i++){a=-Math.PI/2+i*2*Math.PI/5;
+    p+='<circle cx="'+(20+9*Math.cos(a)).toFixed(1)+'" cy="'+(14+9*Math.sin(a)).toFixed(1)+'" r="5.6" fill="'+color+'"/>'}
+  p+='<circle cx="20" cy="14" r="4.2" fill="#F2CE7E"/>';
+  return '<svg viewBox="0 0 40 56" width="30"><line x1="20" y1="30" x2="20" y2="53" stroke="#7FA87F" stroke-width="3" stroke-linecap="round"/>'+p+'</svg>';
+}
+function cropSVG(color){
+  var g="",i;
+  for(i=0;i<4;i++){
+    var x=20+(i%2?4.5:-4.5),y=8+i*4.5;
+    g+='<ellipse cx="'+x+'" cy="'+y+'" rx="3" ry="5.2" fill="#D9A441" transform="rotate('+(i%2?20:-20)+' '+x+' '+y+')"/>';
+  }
+  return '<svg viewBox="0 0 40 56" width="30">'
+    +'<line x1="20" y1="12" x2="20" y2="53" stroke="#3F6B4F" stroke-width="3" stroke-linecap="round"/>'
+    +'<path d="M20 32 Q9 30 7 21 Q16 24 20 32 Z" fill="'+color+'" opacity="0.9"/>'
+    +'<path d="M20 40 Q31 38 33 29 Q24 32 20 40 Z" fill="'+color+'" opacity="0.9"/>'
+    +g+'</svg>';
+}
+function rewardSVG(color){return SET.theme==="alpha"?cropSVG(color):flowerSVG(color)}
+function renderGarden(){
+  var h="",i;
+  for(i=0;i<garden.length;i++){h+='<span title="grown">'+rewardSVG(garden[i])+'</span>'}
+  for(i=garden.length;i<12;i++){h+='<span class="plot"></span>'}
+  $("#gardenRow").innerHTML=h;
+}
+function growReward(){
+  if(garden.length>=12)return;
+  var cs=COLORS();
+  garden.push(cs[garden.length%cs.length]);
+  saveGarden();renderGarden();
+}
+renderGarden();
+
+function applyGarden(n){
+  n=Math.max(0,Math.min(12,Math.round(n)));
+  var cs=COLORS();garden=[];
+  for(var i=0;i<n;i++)garden.push(cs[i%cs.length]);
+  saveGarden();renderGarden();
+}
+$("#syncSend").onclick=function(){
+  $("#popRecv").classList.remove("on");$("#popSet").classList.remove("on");
+  var p=$("#popSend");p.classList.toggle("on");
+  if(p.classList.contains("on"))$("#sendCode").textContent="MG1-"+garden.length;
+};
+$("#syncRecv").onclick=function(){
+  $("#popSend").classList.remove("on");$("#popSet").classList.remove("on");
+  var p=$("#popRecv");p.classList.toggle("on");
+  if(p.classList.contains("on"))$("#recvInput").focus();
+};
+$("#shareFile").onclick=function(){
+  var data=JSON.stringify({app:"mathgarden",v:1,flowers:garden.length,saved:new Date().toISOString()});
+  var file=new File([data],"better-math-"+garden.length+".json",{type:"application/json"});
+  var msg=$("#shareMsg");
+  if(navigator.canShare&&navigator.canShare({files:[file]})){
+    navigator.share({files:[file],title:"Better Math"}).then(function(){
+      msg.textContent=L("sentok");
+    }).catch(function(){msg.textContent=L("cancelled")});
+  }else{
+    var a=document.createElement("a");a.href=URL.createObjectURL(file);a.download=file.name;
+    document.body.appendChild(a);a.click();a.remove();
+    msg.textContent=L("downloaded");
+  }
+};
+$("#recvGo").onclick=function(){
+  var v=parseInt($("#recvInput").value,10),msg=$("#recvMsg");
+  if(isNaN(v)||v<0||v>12){msg.textContent=L("badcode");return}
+  applyGarden(v);
+  msg.textContent=L("received").replace("{n}",v);
+  $("#popRecv").classList.remove("on");
+};
+$("#recvFile").onclick=function(){$("#impFile").click()};
+$("#impFile").onchange=function(){
+  var f=this.files[0];if(!f)return;
+  var rd=new FileReader();
+  rd.onload=function(){
+    try{
+      var d=JSON.parse(rd.result);
+      if(d&&d.app==="mathgarden"&&typeof d.flowers==="number"){
+        applyGarden(d.flowers);
+        $("#recvMsg").textContent=L("received").replace("{n}",d.flowers);
+        $("#popRecv").classList.remove("on");
+      }else{$("#recvMsg").textContent=L("notmg")}
+    }catch(e){$("#recvMsg").textContent=L("cantread")}
+  };
+  rd.readAsText(f);
+};
+
+/* Theme quick-toggle icon in the top bar */
+$("#themeBtn").onclick=function(){
+  SET.theme=SET.theme==="alpha"?"neutral":"alpha";
+  saveSet();applySet();setThemeIcon();
+};
+function setThemeIcon(){
+  $("#themeBtn").innerHTML=SET.theme==="alpha"?cropSVG("#3F6B4F"):flowerSVG("#5B8DB8");
+}
+
+/*
+This Area Of Code Is: The mission picker wiring.
+In Other Words: Tap a card, open a door. Any door. Your pick.
+*/
+var MISSIONS=[
+ ["frac","f_h","#5B8DB8","fair shares|partes justas"],
+ ["pm","pm_h","#9B8AC4","more and less|más y menos"],
+ ["td","td_h","#7FA87F","groups and sharing|grupos y compartir"],
+ ["ms","ms_h","#DFA651","how big is it|qué tan grande es"],
+ ["tl","tl_h","#5B8DB8","metric vs. SAE|métrico vs. SAE"],
+ ["qz","qz_h","#7FA87F","5 gentle questions|5 preguntas amables"]
+];
+function buildMissions(){
+  var w=$("#missions");w.innerHTML="";
+  MISSIONS.forEach(function(m){
+    var b=document.createElement("button");
+    b.className="mission";
+    var desc=OUT(m[3].split("|")[ES()?1:0]);
+    b.innerHTML='<span class="ball" style="background:'+m[2]+'"></span><b>'+L(m[1])+'</b><span>'+desc+'</span>';
+    b.onclick=function(){
+      $$(".mission").forEach(function(x){x.classList.remove("on")});
+      b.classList.add("on");
+      $$(".panel").forEach(function(p){p.classList.remove("on")});
+      var p=$("#p-"+m[0]);
+      p.classList.add("on");
+      if(m[0]==="qz")qzStart();
+      p.classList.remove("flash");void p.offsetWidth;p.classList.add("flash");
+      p.scrollIntoView({behavior:"smooth",block:"start"});
+    };
+    w.appendChild(b);
+  });
+}
+
+/*
+This Area Of Code Is: Shared helpers — dot rendering and steppers.
+In Other Words: Little dots appear one by one so you can count them.
+*/
+function dots(el,n,away){
+  el.innerHTML="";
+  for(var i=0;i<n;i++){
+    var d=document.createElement("span");
+    d.className="dot"+(away&&i<away?" away":"");
+    d.style.animationDelay=Math.min(i*35,600)+"ms";
+    el.appendChild(d);
+  }
+}
+var S={pmA:6,pmB:4,pmMode:"add",tdA:3,tdB:4,tdMode:"times",fracN:2};
+document.addEventListener("click",function(e){
+  var b=e.target.closest?e.target.closest(".st"):null;
+  if(!b)return;
+  var id=b.dataset.t,d=+b.dataset.d;
+  S[id]=Math.min(9,Math.max(1,S[id]+d));
+  $("#"+id).textContent=S[id];
+  if(id.slice(0,2)==="pm")renderPM();else renderTD();
+});
+
+/*
+This Area Of Code Is: The fractions mission logic.
+In Other Words: Watch the pizza get cut, then take one yummy piece.
+*/
+var NAMES={2:["halves","mitades"],3:["thirds","tercios"],4:["quarters","cuartos"],8:["eighths","octavos"]};
+var DEC={2:"0.5",3:"0.33",4:"0.25",8:"0.125"};
+function drawFrac(n){
+  var cx=100,cy=100,r=88,s="";
+  s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="var(--line)" stroke-width="2.5"/>';
+  var a0=-Math.PI/2,a1=a0+2*Math.PI/n;
+  var x0=cx+r*Math.cos(a0),y0=cy+r*Math.sin(a0),x1=cx+r*Math.cos(a1),y1=cy+r*Math.sin(a1);
+  s+='<path d="M '+cx+' '+cy+' L '+x0+' '+y0+' A '+r+' '+r+' 0 0 1 '+x1+' '+y1+' Z" fill="var(--acc,#5B8DB8)" opacity="0.8"/>';
+  for(var i=0;i<n;i++){
+    var a=a0+i*2*Math.PI/n;
+    s+='<line x1="'+cx+'" y1="'+cy+'" x2="'+(cx+r*Math.cos(a))+'" y2="'+(cy+r*Math.sin(a))+'" stroke="var(--line)" stroke-width="2.5"/>';
+  }
+  s+='<circle cx="'+cx+'" cy="'+cy+'" r="4" fill="var(--line)"/>';
+  s+='<text x="'+cx+'" y="'+(cy+r+24)+'" text-anchor="middle" font-size="14" fill="var(--ink-soft)">'+L("cap")+n+'</text>';
+  $("#fracSvg").innerHTML=s;
+  $("#fracBig").textContent="1/"+n;
+  $("#fracSay").textContent=OUT(ES()
+    ?'Corta una pizza en '+n+' '+NAMES[n][1]+' iguales. Toma 1 pieza. ¡Eso es 1/'+n+' — una de '+n+'!'
+    :'Cut one pizza into '+n+' equal '+NAMES[n][0]+'. Take 1 piece. That is 1/'+n+' — one out of '+n+'!');
+  $("#fracDec").innerHTML='<span class="chip">1/'+n+' = '+DEC[n]+'</span>';
+}
+$("#fracBtns").addEventListener("click",function(e){
+  var b=e.target.closest?e.target.closest("button"):null;
+  if(!b)return;
+  $$("#fracBtns .btn").forEach(function(x){x.classList.remove("on")});
+  b.classList.add("on");
+  S.fracN=+b.dataset.n;drawFrac(S.fracN);
+});
+
+/*
+This Area Of Code Is: The plus & minus mission logic.
+In Other Words: Watch the dots join up, or gently float away.
+*/
+$("#pmAdd").onclick=function(){$("#pmAdd").classList.add("on");$("#pmSub").classList.remove("on");S.pmMode="add";renderPM()};
+$("#pmSub").onclick=function(){$("#pmSub").classList.add("on");$("#pmAdd").classList.remove("on");S.pmMode="sub";renderPM()};
+function renderPM(){
+  var a=S.pmA,b=S.pmB;
+  if(S.pmMode==="add"){
+    dots($("#pmDots1"),a,0);dots($("#pmDots2"),b,0);
+    $("#pmDots2").style.display="flex";
+    var seq=[],i;for(i=1;i<=b;i++)seq.push(a+i);
+    $("#pmBig").textContent=a+" + "+b+" = "+(a+b);
+    $("#pmSay").textContent=ES()
+      ?'Empieza en '+a+'. Cuenta '+b+' más: '+seq.join(", ")+'. ¡En total: '+(a+b)+'!'
+      :'Start at '+a+'. Count '+b+' more: '+seq.join(", ")+'. All together: '+(a+b)+"!";
+  }else{
+    $("#pmDots2").style.display="none";
+    dots($("#pmDots1"),a,Math.min(b,a));
+    $("#pmBig").textContent=a+" − "+b+" = "+(a-b);
+    $("#pmSay").textContent=OUT((b<=a)
+      ?(ES()?'Tienes '+a+'. Quita '+b+'. ¡Quedan '+(a-b)+'!':'You have '+a+'. Take away '+b+'. That leaves '+(a-b)+"!")
+      :(ES()?'¡Eso baja de cero — como deberle '+ (b-a) +' galleta a alguien! ('+a+' − '+b+' = '+(a-b)+')':'That goes below zero — like owing someone '+(b-a)+' cookie! ('+a+' − '+b+' = '+(a-b)+""));
+  }
+}
+
+/*
+This Area Of Code Is: The times & divide mission logic.
+In Other Words: Times makes piles. Divide hands them out fair and square.
+*/
+$("#tdTimes").onclick=function(){$("#tdTimes").classList.add("on");$("#tdDiv").classList.remove("on");S.tdMode="times";renderTD()};
+$("#tdDiv").onclick=function(){$("#tdDiv").classList.add("on");$("#tdTimes").classList.remove("on");S.tdMode="div";renderTD()};
+function renderTD(){
+  var a=S.tdA,b=S.tdB,g=$("#tdGroups");
+  g.innerHTML="";
+  if(S.tdMode==="times"){
+    var i,j,grp,d;
+    for(i=0;i<a;i++){
+      grp=document.createElement("div");grp.className="grp";
+      for(j=0;j<b;j++){
+        d=document.createElement("span");d.className="dot";
+        d.style.animationDelay=Math.min((i*b+j)*30,700)+"ms";
+        grp.appendChild(d);
+      }
+      g.appendChild(grp);
+    }
+    var seq=[],c=0;for(var k=1;k<=a;k++){c+=b;seq.push(c)}
+    $("#tdBig").textContent=a+" × "+b+" = "+(a*b);
+    $("#tdSay").textContent=OUT(ES()
+      ?a+' grupos de '+b+'. Cuenta de '+b+' en '+b+': '+seq.join(", ")+'. ¡Entonces '+a+' × '+b+' = '+(a*b)+'!'
+      :a+' groups of '+b+'. Skip-count: '+seq.join(", ")+'. So '+a+' × '+b+' = '+(a*b)+"!"));
+  }else{
+    var q=Math.floor(a/b),r=a%b,p,m,plate,d2,hole;
+    for(p=0;p<b;p++){
+      plate=document.createElement("div");plate.className="grp";
+      for(m=0;m<q;m++){
+        d2=document.createElement("span");d2.className="dot";
+        d2.style.animationDelay=Math.min((p*q+m)*30,700)+"ms";
+        plate.appendChild(d2);
+      }
+      g.appendChild(plate);
+    }
+    for(m=0;m<r;m++){
+      hole=document.createElement("span");hole.className="dot hole";
+      hole.style.animationDelay=Math.min((b*q+m)*30,700)+"ms";
+      g.appendChild(hole);
+    }
+    $("#tdBig").textContent=a+" ÷ "+b+" = "+q+(r?"  ("+r+")":"");
+    $("#tdSay").textContent=OUT(ES()
+      ?a+' galletas repartidas entre '+b+' amigos = '+q+' cada uno'+(r?", con "+r+" guardadas para mañana":"")+'. ¡Todos iguales — justo!'
+      :a+' cookies shared by '+b+' friends = '+q+' each'+(r?", with "+r+" saved for tomorrow":"")+'. Everyone gets the same — fair!');
+  }
+}
+
+/*
+This Area Of Code Is: The measure mission logic.
+In Other Words: Slide the slider and watch the numbers change both ways.
+*/
+var PAIRS=[
+ {id:"cf",label:["Celsius ↔ Fahrenheit (weather)","Celsius ↔ Fahrenheit (clima)"],cf:1,min:-10,max:50,val:20},
+ {id:"in",label:["Inches ↔ centimeters","Pulgadas ↔ centímetros"],k:2.54,A:"in",B:"cm",min:1,max:12,step:0.5,val:4,
+  fact:["An inch is about as wide as your thumb.","Una pulgada es casi tan ancha como tu dedo pulgar."]},
+ {id:"m",label:["Meters ↔ feet","Metros ↔ pies"],k:3.281,A:"m",B:"ft",min:1,max:10,step:0.5,val:1,
+  fact:["A meter is one giant step. (A meter is a little longer than a yard.)","Un metro es un paso gigante. (Un metro es un poco más largo que una yarda.)"]},
+ {id:"mi",label:["Miles ↔ kilometers","Millas ↔ kilómetros"],k:1.609,A:"mi",B:"km",min:1,max:10,val:1,
+  fact:["A mile is about a 20-minute walk. A kilometer is about 12 minutes.","Una milla son como 20 minutos caminando. Un kilómetro, como 12."]},
+ {id:"kg",label:["Pounds ↔ kilograms","Libras ↔ kilogramos"],k:0.454,A:"lb",B:"kg",min:1,max:50,val:10,
+  fact:['1 kilogram ≈ 2.2 pounds — the "2 for 1" deal! A kilogram is a bag of sugar.','1 kilogramo ≈ 2.2 libras — ¡el trato del 2 por 1! Un kilogramo es una bolsa de azúcar.']},
+ {id:"L",label:["Gallons ↔ liters","Galones ↔ litros"],k:3.785,A:"gal",B:"L",min:1,max:5,val:1,
+  fact:["A liter is about a quart — a big bottle of water. A gallon is almost 4 liters.","Un litro es como un cuarto de galón — una botella grande de agua. Un galón son casi 4 litros."]}
+];
+function msBuild(){
+  var i=ES()?1:0,cur=+($("#msSel").value||0);
+  var h="";PAIRS.forEach(function(p,j){h+='<option value="'+j+'">'+p.label[i]+'</option>'});
+  $("#msSel").innerHTML=h;$("#msSel").value=Math.min(cur,PAIRS.length-1);
+}
+function msRender(){
+  var i=ES()?1:0,p=PAIRS[+$("#msSel").value],r=$("#msR"),v=+r.value;
+  if(p.cf){
+    $("#msOut").textContent=v+" °C = "+r2(v*9/5+32)+" °F";
+    var feel=v<=0?L("feel0"):v<=15?L("feel1"):v<=25?L("feel2"):L("feel3");
+    $("#msFact").textContent=feel+L("mstail");
+  }else{
+    $("#msOut").textContent=v+" "+p.A+" = "+r2(v*p.k)+" "+p.B+"   ·   "+v+" "+p.B+" = "+r2(v/p.k)+" "+p.A;
+    $("#msFact").textContent=OUT(p.fact[i]);
+  }
+}
+$("#msSel").onchange=function(){var p=PAIRS[+this.value],r=$("#msR");r.min=p.min;r.max=p.max;r.step=p.step||1;r.value=p.val;msRender()};
+$("#msR").oninput=msRender;
+function msInit(){var p=PAIRS[+$("#msSel").value||0],r=$("#msR");r.min=p.min;r.max=p.max;r.step=p.step||1;r.value=p.val;msRender()}
+
+/*
+This Area Of Code Is: The gentle challenge — bilingual question generators and feedback.
+In Other Words: Answer, and something living grows. Miss, and you just try again. That's it.
+*/
+function mkQ(q,o,a,say){return{q:q,o:o,a:a,say:say}}
+function genAdd(){var a=rnd(2,9),b=rnd(2,9);return mkQ(a+" + "+b+" = ?",shuffle([a+b,a+b+1,a+b-1,a+b+2]),a+b,
+ OUT(ES()?"Empieza en "+a+" y cuenta "+b+" más — ¡llegas a "+(a+b)+"!":"Start at "+a+" and count "+b+" more — you land on "+(a+b)+"!"))}
+function genSub(){var a=rnd(3,12),b=rnd(1,a);return mkQ(a+" − "+b+" = ?",shuffle([a-b,a-b+1,a-b-1,a-b+2]),a-b,
+ OUT(ES()?"Quita "+b+" de "+a+" y quedan "+(a-b)+".":a+" take away "+b+" leaves "+(a-b)+"."))}
+function genMul(){var a=rnd(2,9),b=rnd(2,9);return mkQ(a+" × "+b+" = ?",shuffle([a*b,a*b+1,a*b-1,a*b+b]),a*b,
+ OUT(ES()?"¡"+a+" grupos de "+b+" — cuenta saltando hasta "+a*b+"!":a+" groups of "+b+" — skip-count to "+a*b+"!"))}
+function genDiv(){var b=rnd(2,9),c=rnd(2,9),a=b*c;return mkQ(a+" ÷ "+b+" = ?",shuffle([c,c+1,c-1,Math.max(1,c-2)]),c,
+ OUT(ES()?a+" repartidas entre "+b+" amigos son "+c+" cada uno. ¡Justo!":a+" shared by "+b+" friends is "+c+" each. Fair!"))}
+var FRACQ=[
+ {q:["Which is bigger — 3/4 or 2/3?","¿Cuál es mayor — 3/4 o 2/3?"],o:[["3/4","2/3","same size"],["3/4","2/3","iguales"]],a:0,
+  say:["3/4 = 0.75 and 2/3 ≈ 0.67. Three quarters wins!","3/4 = 0.75 y 2/3 ≈ 0.67. ¡Ganan tres cuartos!"]},
+ {q:["Which is bigger — 5/8 or 1/2?","¿Cuál es mayor — 5/8 o 1/2?"],o:[["5/8","1/2","same size"],["5/8","1/2","iguales"]],a:0,
+  say:["5/8 = 0.625 — just a little more than half.","5/8 = 0.625 — un poquito más de la mitad."]},
+ {q:["What is 1/2 as a decimal?","¿Cuánto es 1/2 como decimal?"],o:[["0.5","0.2","0.25"],["0.5","0.2","0.25"]],a:0,
+  say:["Half of 1 whole is 0.5.","La mitad de 1 entero es 0.5."]},
+ {q:["What is 1/4 as a decimal?","¿Cuánto es 1/4 como decimal?"],o:[["0.25","0.4","0.14"],["0.25","0.4","0.14"]],a:0,
+  say:["A quarter is half of a half: 0.25.","Un cuarto es la mitad de la mitad: 0.25."]},
+ {q:["2/4 is the same as…","2/4 es lo mismo que…"],o:[["1/2","1/4","2/2"],["1/2","1/4","2/2"]],a:0,
+  say:["Two quarters make one half!","¡Dos cuartos hacen una mitad!"]},
+ {q:["How many quarters make one whole?","¿Cuántos cuartos hacen un entero?"],o:[["4","2","3"],["4","2","3"]],a:0,
+  say:["4/4 = 1 whole — like 4 quarter slices of pizza!","4/4 = 1 entero — ¡como 4 rebanadas de pizza!"]}
+];
+var FACTQ=[
+ {q:["Which is longer — 1 mile or 1 kilometer?","¿Cuál es más largo — 1 milla o 1 kilómetro?"],o:[["1 mile","1 kilometer","same"],["1 milla","1 kilómetro","iguales"]],a:0,
+  say:["1 mile = 1.609 km. The mile wins!","1 milla = 1.609 km. ¡Gana la milla!"]},
+ {q:["About how many centimeters is 1 inch?","¿Aproximadamente cuántos centímetros tiene 1 pulgada?"],o:[["2.54","1","12"],["2.54","1","12"]],a:0,
+  say:["1 inch = 2.54 cm — about your thumb width.","1 pulgada = 2.54 cm — como tu dedo pulgar."]},
+ {q:["Which is heavier — 1 kilogram or 1 pound?","¿Cuál pesa más — 1 kilogramo o 1 libra?"],o:[["1 kilogram","1 pound","same"],["1 kilogramo","1 libra","iguales"]],a:0,
+  say:['1 kg ≈ 2.2 lb — the "2 for 1" trick!','1 kg ≈ 2.2 lb — ¡el truco del 2 por 1!']},
+ {q:["Water freezes at…","El agua se congela a…"],o:[["0 °C and 32 °F","100 °C","50 °F"],["0 °C y 32 °F","100 °C","50 °F"]],a:0,
+  say:["Ice starts at 0 °C, which is 32 °F.","El hielo empieza a 0 °C, que es 32 °F."]},
+ {q:["A liter is closest to…","Un litro es casi como…"],o:[["a big bottle of water","a swimming pool","a spoon"],["una botella grande de agua","una alberca","una cuchara"]],a:0,
+  say:["A liter ≈ a quart — a big bottle.","Un litro ≈ un cuarto de galón — una botella grande."]}
+];
+var qz={qs:[],cur:0,tries:0};
+function qzStart(){
+  qz.cur=0;qz.tries=0;
+  var i=ES()?1:0;
+  qz.qs=shuffle([genAdd,genSub,genMul,genDiv,
+    function(){var q=pick(FRACQ);return mkQ(OUT(q.q[i]),shuffle(q.o[i].slice()).map(OUT),q.a,OUT(q.say[i]))},
+    function(){var q=pick(FACTQ);return mkQ(OUT(q.q[i]),shuffle(q.o[i].slice()).map(OUT),q.a,OUT(q.say[i]))}
+  ]).slice(0,5).map(function(f){return f()});
+  qzRender();
+}
+function qzRender(){
+  var box=$("#qzBox");
+  if(qz.cur>=qz.qs.length){
+    box.innerHTML='<div class="big" style="font-size:24px">'+L("done_h")+'</div>'+
+      '<p class="say">'+L("done_p")+'</p>'+
+      '<button class="btn" id="qzAgain">'+L("again")+'</button>';
+    $("#qzAgain").onclick=qzStart;
+    return;
+  }
+  var q=qz.qs[qz.cur];
+  var opts=shuffle(q.o.map(function(t,idx){return{t:t,ok:idx===q.a}}));
+  var h='<p class="note">'+L("q_of").replace("{n}",qz.cur+1)+'</p><p class="q">'+q.q+'</p>';
+  opts.forEach(function(o){h+='<button class="opt" data-ok="'+(o.ok?1:0)+'">'+o.t+'</button>'});
+  h+='<p class="say" id="qzSay" aria-live="polite" style="display:none"></p>';
+  box.innerHTML=h;
+  $$("#qzBox .opt").forEach(function(b){
+    b.onclick=function(){
+      var ok=b.dataset.ok==="1";
+      var say=$("#qzSay");say.style.display="block";
+      if(ok){
+        b.classList.add("yes");
+        $$("#qzBox .opt").forEach(function(x){x.disabled=true});
+        say.textContent=L("q_right")+OUT(q.say);
+        growReward();
+        var nxt=document.createElement("button");
+        nxt.className="btn";nxt.style.marginTop="10px";
+        nxt.textContent=qz.cur===qz.qs.length-1?L("see"):L("next");
+        nxt.onclick=function(){qz.cur++;qz.tries=0;qzRender()};
+        box.appendChild(nxt);
+      }else{
+        b.classList.add("nope");b.disabled=true;qz.tries++;
+        say.textContent=qz.tries<2?L("q_try"):L("q_hint")+OUT(q.say);
+      }
+    };
+  });
+}
+
+/*
+This Area Of Code Is: Language switching — re-render everything in the new language.
+In Other Words: Turn the language dial and the whole app speaks the new words.
+*/
+function applyLang(){
+  var d=I18N[LANG]||I18N.en;
+  $$("[data-i18n]").forEach(function(el){var k=el.dataset.i18n;if(d[k]&&k!=="gt")el.innerHTML=d[k]});
+  $$("[data-i18n-aria]").forEach(function(el){var k=el.dataset.i18nAria;if(d[k])el.setAttribute("aria-label",d[k])});
+  buildMissions();mnavUpdate();
+  drawFrac(S.fracN);
+  renderPM();renderTD();
+  msBuild();msInit();
+  applySet();syncSticky();
+  if($("#p-qz").classList.contains("on"))qzStart();
+}
+$("#langSel").onchange=function(){
+  LANG=this.value;SET.lang=LANG;saveSet();
+  document.documentElement.lang=LANG;
+  document.documentElement.dir=RTL.indexOf(LANG)>-1?"rtl":"ltr";
+  TDICT=null;applyLang();
+  if(LANG!=="es"&&LANG!=="en"){loadTDict(LANG,function(){applyLang()})}
+};
+
+/*
+This Area Of Code Is: First paint — apply saved settings, then draw everything.
+In Other Words: The app wakes up already wearing your favorite clothes.
+*/
+/* Scroll affordances: side arrows show there is more sideways; the pill shows there is more below */
+function syncSticky(){$("#missions").style.top=(document.querySelector(".topfloat").offsetHeight+14)+"px"}
+window.addEventListener("resize",syncSticky);
+var miBar=$("#missions");
+function mnavUpdate(){
+  var max=miBar.scrollWidth-miBar.clientWidth;
+  $("#mnavL").style.display=miBar.scrollLeft>4?"flex":"none";
+  $("#mnavR").style.display=max>4&&miBar.scrollLeft<max-4?"flex":"none";
+}
+miBar.addEventListener("scroll",mnavUpdate);
+window.addEventListener("resize",mnavUpdate);
+$("#mnavL").onclick=function(){miBar.scrollBy({left:-190,behavior:"smooth"})};
+$("#mnavR").onclick=function(){miBar.scrollBy({left:190,behavior:"smooth"})};
+var shEl=$("#scrollHint");
+function shUpdate(){
+  var doc=document.documentElement;
+  var can=doc.scrollHeight>window.innerHeight+40;
+  var nearBottom=window.innerHeight+window.scrollY>doc.scrollHeight-90;
+  shEl.classList.toggle("off",!can||nearBottom);
+}
+window.addEventListener("scroll",shUpdate,{passive:true});
+window.addEventListener("resize",shUpdate);
+
+(function(){var s=$("#langSel");LANGS.forEach(function(l){var o=document.createElement("option");o.value=l[0];o.textContent=l[1];s.appendChild(o)});s.value=LANG;})();
+$("#icoNeutral").innerHTML=flowerSVG("#5B8DB8");
+$("#icoAlpha").innerHTML=cropSVG("#3F6B4F");
+setThemeIcon();
+document.documentElement.dir=RTL.indexOf(LANG)>-1?"rtl":"ltr";
+applySet();
+buildMissions();
+drawFrac(2);
+renderPM();
+renderTD();
+msBuild();
+msInit();
+syncSticky();
+mnavUpdate();
+shUpdate();
+if(LANG!=="es"&&LANG!=="en"){loadTDict(LANG,function(){applyLang()})}
+window.__bmReady=1;
+</script>
+</body>
+</html>
