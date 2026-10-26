@@ -307,6 +307,7 @@ travel to your other device whenever you want.
   <p class="say" style="margin-top:0" data-i18n="ps_code">Your garden code is:</p>
   <div class="code-big" id="sendCode"></div>
   <p class="note" style="margin-top:12px" data-i18n="ps_note">On your other device, open Better Math, tap "get my garden," and type this code. Or share the progress file (AirDrop loves this):</p>
+  <button class="btn" id="textCode" data-i18n="ps_text" style="margin-right:8px">text the code</button>
   <button class="btn" id="shareFile" data-i18n="ps_share">share progress file</button>
   <p class="note" id="shareMsg"></p>
 </div>
@@ -576,7 +577,7 @@ tl_tip:"Tip: digital calipers switch between metric and SAE instantly.",
 qz_h:"Grow the garden",qz_sub:"Five questions. Every right answer grows a flower. Wrong answers are welcome — mistakes are how brains grow.",
 ps_h:"Send my progress to another device",ps_code:"Your garden code is:",
 ps_note:"On your other device, open Better Math, tap &quot;get my progress,&quot; and type this code. Or share the progress file (AirDrop loves this):",
-ps_share:"share progress file",
+ps_text:"text the code",ps_textbody:"My Better Math garden code is {code}",ps_share:"share progress file",
 pr_h:"Get my progress on this device",pr_type:"Type the garden code from your other device:",
 pr_go:"plant it here",pr_or:"…or open a progress file that was shared with you:",pr_file:"open progress file",
 q_of:"Question {n} of 5",q_right:"You figured it out — nice thinking! ",
@@ -624,7 +625,7 @@ tl_tip:"Tip: las pinzas digitales cambian entre métrico y SAE al instante.",
 qz_h:"Haz crecer el jardín",qz_sub:"Cinco preguntas. Cada respuesta correcta hace crecer una flor. Los errores son bienvenidos — así crece el cerebro.",
 ps_h:"Envía tu progreso a otro aparato",ps_code:"Tu código de jardín es:",
 ps_note:"En tu otro aparato, abre Better Math, toca «traer mi progreso» y escribe este código. O comparte el archivo de progreso (AirDrop es ideal):",
-ps_share:"compartir archivo de progreso",
+ps_text:"mandar el código por mensaje",ps_textbody:"Mi código de jardín de Better Math es {code}",ps_share:"compartir archivo de progreso",
 pr_h:"Trae tu progreso a este aparato",pr_type:"Escribe el código del jardín de tu otro aparato:",
 pr_go:"plantarlo aquí",pr_or:"…o abre un archivo de progreso que te compartieron:",pr_file:"abrir archivo de progreso",
 q_of:"Pregunta {n} de 5",q_right:"¡Lo descubriste — qué buen pensamiento! ",
@@ -790,6 +791,7 @@ function applyGarden(n){
   for(var i=0;i<n;i++)garden.push(cs[i%cs.length]);
   saveGarden();renderGarden();
 }
+var TEXT_TO="+19195250548"; /* family phone — code arrives by text */
 $("#syncSend").onclick=function(){
   $("#popRecv").classList.remove("on");$("#popSet").classList.remove("on");
   var p=$("#popSend");p.classList.toggle("on");
@@ -813,6 +815,10 @@ $("#shareFile").onclick=function(){
     document.body.appendChild(a);a.click();a.remove();
     msg.textContent=L("downloaded");
   }
+};
+$("#textCode").onclick=function(){
+  var body=L("ps_textbody").replace("{code}","MG1-"+garden.length);
+  window.location.href="sms:"+TEXT_TO+"?body="+encodeURIComponent(body);
 };
 $("#recvGo").onclick=function(){
   var v=parseInt($("#recvInput").value,10),msg=$("#recvMsg");
